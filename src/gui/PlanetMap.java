@@ -1166,7 +1166,7 @@ public class PlanetMap extends JPanel {
         for (int i = 0; i < tile_no.length; i++) {
 
             if (tile_no[i] != -1) {
-                if (i == Layer.RESOURCE.ordinal() || i == Layer.STRUCTURE.ordinal()) {
+                if (i == 3 || i == 11) {
                     pixel_data[0] = structures[tile_no[i]][t_idx];
                 } else {
                     pixel_data[0] = hex_tiles[tile_no[i]][t_idx];
@@ -1230,29 +1230,10 @@ public class PlanetMap extends JPanel {
          * structure
          *
          */
-        final int EDGEN     = Layer.EDGEN.ordinal();
-        final int EDGENW    = Layer.EDGENW.ordinal();
-        final int BASE      = Layer.BASE.ordinal();
-        final int FOREST    = Layer.FOREST.ordinal();
-        final int MOUNTAIN  = Layer.MOUNTAIN.ordinal();
-        final int FADEN     = Layer.FADEN.ordinal();
-        final int FADENW    = Layer.FADENW.ordinal();
-        final int RESOURCE  = Layer.RESOURCE.ordinal();
-        final int ROAD      = Layer.ROAD.ordinal();
-        final int ROADN     = Layer.ROADN.ordinal();
-        final int ROADNE    = Layer.ROADNE.ordinal();
-        final int ROADSE    = Layer.ROADSE.ordinal();
-        final int ROADS     = Layer.ROADS.ordinal();
-        final int ROADSW    = Layer.ROADSW.ordinal();
-        final int ROADNW    = Layer.ROADNW.ordinal();
-        final int STRUCTURE = Layer.STRUCTURE.ordinal();
-        int[] tile_no = { 
-            -1, -1, -1, -1, -1, -1,
-            -1, -1, -1, -1, -1, -1,
-            -1, -1, -1, -1, -1, -1,
-            -1, -1, -1, -1, -1, -1,
-            -1
-        };
+        int[] tile_no = {
+            -1, -1, -1, -1,
+            -1, -1, -1, -1,
+            -1, -1, -1, -1};
 
         int current_planet = game.getCurrentPlanetNr();
 
@@ -1260,51 +1241,51 @@ public class PlanetMap extends JPanel {
         Hex hex = game.getPlanetGrid(current_planet).getHex(u, v);
         if (city != null) {
             if (hex.isSpotted(game.getTurn())) {
-                tile_no[STRUCTURE] = city.type;
+                tile_no[11] = city.type;
             } else {
-                tile_no[STRUCTURE] = 21;
+                tile_no[11] = 21;
             }
         }
 
         Structure resource = game.getPlanetGrid(current_planet).getHex(u, v).getResource();
         if (resource != null && hex.isSpotted(game.getTurn())) {
-            tile_no[RESOURCE] = resource.type;
+            tile_no[3] = resource.type;
         }
 
         PlanetGrid planet_map = game.getPlanetGrid(current_planet);
         Hex h = planet_map.getHex(u, v);
         if (h.getTerrain(C.ROAD)) {
-            tile_no[ROAD] = 66;
+            tile_no[4] = 66;
 
             Hex neighbour = h.getN(C.NORTH);
             if (neighbour != null && neighbour.getTerrain(C.ROAD)) {
-                tile_no[ROADN] = 70;
-                tile_no[ROAD] = -1;
+                tile_no[5] = 70;
+                tile_no[4] = -1;
             }
             neighbour = h.getN(C.NORTHEAST);
             if (neighbour != null && neighbour.getTerrain(C.ROAD)) {
-                tile_no[ROADNE] = 72;
-                tile_no[ROAD] = -1;
+                tile_no[6] = 72;
+                tile_no[4] = -1;
             }
             neighbour = h.getN(C.SOUTHEAST);
             if (neighbour != null && neighbour.getTerrain(C.ROAD)) {
-                tile_no[ROADSE] = 69;
-                tile_no[ROAD] = -1;
+                tile_no[7] = 69;
+                tile_no[4] = -1;
             }
             neighbour = h.getN(C.SOUTH);
             if (neighbour != null && neighbour.getTerrain(C.ROAD)) {
-                tile_no[ROADS] = 68;
-                tile_no[ROAD] = -1;
+                tile_no[8] = 68;
+                tile_no[4] = -1;
             }
             neighbour = h.getN(C.SOUTHWEST);
             if (neighbour != null && neighbour.getTerrain(C.ROAD)) {
-                tile_no[ROADSW] = 71;
-                tile_no[ROAD] = -1;
+                tile_no[9] = 71;
+                tile_no[4] = -1;
             }
             neighbour = h.getN(C.NORTHWEST);
             if (neighbour != null && neighbour.getTerrain(C.ROAD)) {
-                tile_no[ROADNW] = 67;
-                tile_no[ROAD] = -1;
+                tile_no[10] = 67;
+                tile_no[4] = -1;
             }
         }
 //        // change to instance variable
@@ -1347,7 +1328,7 @@ public class PlanetMap extends JPanel {
 
         if (Util.isWater(flags)) {
 
-            tile_no[BASE] = 49;
+            tile_no[0] = 49;
 //            System.out.println("water found");
             return tile_no;
 
@@ -1359,237 +1340,237 @@ public class PlanetMap extends JPanel {
         }
 
         if (Util.isDelta(flags)) {
-            tile_no[Layer.RIVER.ordinal()] = 94;
+            tile_no[1] = 94;
             flags >>>= 11;
         }
 
         if (Util.isForestHill(flags)) {
-            tile_no[MOUNTAIN] = processFlags(flags & 0b0011_0111);
+            tile_no[2] = processFlags(flags & 0b0011_0111);
             flags >>>= 9;
         } else if (Util.isForestMtn(flags)) {
-            tile_no[MOUNTAIN] = processFlags(flags & 0b0011_0110);
+            tile_no[2] = processFlags(flags & 0b0011_0110);
             flags >>>= 9;
         } else if (Util.isForestRiver(flags)) {
 //            System.out.println("isForestRiver");
 //            System.out.println("raw flags: " + Util.createFlagString(flags));
-            tile_no[MOUNTAIN] = processFlags(flags & 0b0000_1111_1111);
+            tile_no[2] = processFlags(flags & 0b0000_1111_1111);
 //            System.out.println("tile_no[2]: " + tile_no[2]);
             flags >>>= 9;
         }
 
         if (Util.isOnlyGrass(flags)) {
-            tile_no[BASE] = 73;
+            tile_no[0] = 73;
             return tile_no;
         }
 
         if (Util.isOnlyAridGrass(flags)) {
-            tile_no[BASE] = 80;
+            tile_no[0] = 80;
             return tile_no;
         }
 
         if (Util.isOnlyDesert(flags)) {
-            tile_no[BASE] = 87;
+            tile_no[0] = 87;
             return tile_no;
         }
 
         if (Util.isOnlyIce(flags)) {
-            tile_no[BASE] = 124;
+            tile_no[0] = 124;
             return tile_no;
         }
 
         if (Util.isOnlyTundra(flags)) {
-            tile_no[BASE] = 117;
+            tile_no[0] = 117;
             return tile_no;
         }
 
         if (Util.isGrass(flags)) {
-            tile_no[BASE] = 73;
+            tile_no[0] = 73;
             flags = flags ^ 0b0010_0000_0000;
         } else if (Util.isAridGrass(flags)) {
-            tile_no[BASE] = 80;
+            tile_no[0] = 80;
             flags = flags ^ 0b0100_0000_0000;
         } else if (Util.isDesert(flags)) {
-            tile_no[BASE] = 87;
+            tile_no[0] = 87;
             flags = flags ^ 0b0110_0000_0000;
         } else if (Util.isIce(flags)) {
-            tile_no[BASE] = 124;
+            tile_no[0] = 124;
             flags = flags ^ 0b1000_0000_0000;
         } else if (Util.isTundra(flags)) {
-            tile_no[BASE] = 117;
+            tile_no[0] = 117;
             flags = flags ^ 0b1010_0000_0000;
         }
         String s_flags = Util.createFlagString(flags);
 //                System.out.println("flags u, v: " + u + ", " + v + ": " + s_flags);
         switch (s_flags) {
             case "0124":
-                tile_no[MOUNTAIN] = 131;
+                tile_no[2] = 131;
                 break;
             case "0125":
-                tile_no[MOUNTAIN] = 132;
+                tile_no[2] = 132;
                 break;
             case "012":
-                tile_no[MOUNTAIN] = 130;
+                tile_no[2] = 130;
                 break;
             case "034568":
-                tile_no[FOREST] = 64;
+                tile_no[1] = 64;
                 break;
             case "03456":
-                tile_no[FOREST] = 64;
+                tile_no[1] = 64;
                 break;
             case "0345":
-                tile_no[FOREST] = 60;
+                tile_no[1] = 60;
                 break;
             case "03468":
-                tile_no[FOREST] = 62;
+                tile_no[1] = 62;
                 break;
             case "0346":
-                tile_no[FOREST] = 62;
+                tile_no[1] = 62;
                 break;
             case "0348":
-                tile_no[FOREST] = 58;
+                tile_no[1] = 58;
                 break;
             case "034":
-                tile_no[FOREST] = 58;
+                tile_no[1] = 58;
                 break;
             case "0356":
-                tile_no[FOREST] = 63;
+                tile_no[1] = 63;
                 break;
             case "0357":
-                tile_no[FOREST] = 59;
+                tile_no[1] = 59;
                 break;
             case "035":
-                tile_no[FOREST] = 59;
+                tile_no[1] = 59;
                 break;
             case "03678":
-                tile_no[FOREST] = 61;
+                tile_no[1] = 61;
                 break;
             case "0367":
-                tile_no[FOREST] = 61;
+                tile_no[1] = 61;
                 break;
             case "0368":
-                tile_no[FOREST] = 61;
+                tile_no[1] = 61;
                 break;
             case "036":
-                tile_no[FOREST] = 61;
+                tile_no[1] = 61;
                 break;
             case "0378":
-                tile_no[FOREST] = 57;
+                tile_no[1] = 57;
                 break;
             case "037":
-                tile_no[FOREST] = 57;
+                tile_no[1] = 57;
                 break;
             case "038":
-                tile_no[FOREST] = 57;
+                tile_no[1] = 57;
                 break;
             case "03":
-                tile_no[FOREST] = 57;
+                tile_no[1] = 57;
                 break;
             case "124":
-                tile_no[MOUNTAIN] = 30;
+                tile_no[2] = 30;
                 break;
             case "125":
-                tile_no[MOUNTAIN] = 31;
+                tile_no[2] = 31;
                 break;
             case "12":
-                tile_no[MOUNTAIN] = 29;
+                tile_no[2] = 29;
                 break;
             case "34567":
-                tile_no[FOREST] = 15;
+                tile_no[1] = 15;
                 break;
             case "34568":
-                tile_no[FOREST] = 23;
+                tile_no[1] = 23;
                 break;
             case "3456":
-                tile_no[FOREST] = 7;
+                tile_no[1] = 7;
                 break;
             case "34578":
-                tile_no[FOREST] = 27;
+                tile_no[1] = 27;
                 break;
             case "3457":
-                tile_no[FOREST] = 11;
+                tile_no[1] = 11;
                 break;
             case "3458":
-                tile_no[FOREST] = 19;
+                tile_no[1] = 19;
                 break;
             case "345":
-                tile_no[FOREST] = 3;
+                tile_no[1] = 3;
                 break;
             case "3467":
-                tile_no[FOREST] = 13;
+                tile_no[1] = 13;
                 break;
             case "3468":
-                tile_no[FOREST] = 21;
+                tile_no[1] = 21;
                 break;
             case "346":
-                tile_no[FOREST] = 5;
+                tile_no[1] = 5;
                 break;
             case "3478":
-                tile_no[FOREST] = 25;
+                tile_no[1] = 25;
                 break;
             case "347":
-                tile_no[FOREST] = 9;
+                tile_no[1] = 9;
                 break;
             case "348":
-                tile_no[FOREST] = 17;
+                tile_no[1] = 17;
                 break;
             case "34":
-                tile_no[FOREST] = 1;
+                tile_no[1] = 1;
                 break;
             case "3567":
-                tile_no[FOREST] = 14;
+                tile_no[1] = 14;
                 break;
             case "3568":
-                tile_no[FOREST] = 22;
+                tile_no[1] = 22;
                 break;
             case "356":
-                tile_no[FOREST] = 6;
+                tile_no[1] = 6;
                 break;
             case "3578":
-                tile_no[FOREST] = 26;
+                tile_no[1] = 26;
                 break;
             case "357":
-                tile_no[FOREST] = 10;
+                tile_no[1] = 10;
                 break;
             case "358":
-                tile_no[FOREST] = 18;
+                tile_no[1] = 18;
                 break;
             case "35":
-                tile_no[FOREST] = 2;
+                tile_no[1] = 2;
                 break;
             case "3678":
-                tile_no[FOREST] = 28;
+                tile_no[1] = 28;
                 break;
             case "367":
-                tile_no[FOREST] = 12;
+                tile_no[1] = 12;
                 break;
             case "368":
-                tile_no[FOREST] = 20;
+                tile_no[1] = 20;
                 break;
             case "36":
-                tile_no[FOREST] = 4;
+                tile_no[1] = 4;
                 break;
             case "378":
-                tile_no[FOREST] = 24;
+                tile_no[1] = 24;
                 break;
             case "37":
-                tile_no[FOREST] = 8;
+                tile_no[1] = 8;
                 break;
             case "38":
-                tile_no[FOREST] = 16;
+                tile_no[1] = 16;
                 break;
             case "3":
-                tile_no[FOREST] = 0;
+                tile_no[1] = 0;
                 break;
             default:
                 break;
         }
 
         //efstile*.bin has extra first element
-        if (tile_no[FOREST] != -1) {
-            tile_no[FOREST]++;
+        if (tile_no[1] != -1) {
+            tile_no[1]++;
         }
-        if (tile_no[MOUNTAIN] != -1) {
-            tile_no[MOUNTAIN]++;
+        if (tile_no[2] != -1) {
+            tile_no[2]++;
         }
         return tile_no;
     }
@@ -1951,36 +1932,5 @@ public class PlanetMap extends JPanel {
 
         }
 
-    }
-
-    public enum Layer {
-        EDGEN(0),
-        EDGENE(1),
-        EDGEE(2),
-        EDGES(3),
-        EDGESW(4),
-        EDGENW(5),
-        BASE(6),
-        FADEN(7),
-        FADENE(8),
-        FADESE(9),
-        FADES(10),
-        FADESW(11),
-        FADENW(12),
-        FOREST(13),
-        MOUNTAIN(14),
-        RIVER(15),
-        RESOURCE(16),
-        ROAD(17),
-        ROADN(18),
-        ROADNE(19),
-        ROADSE(20),
-        ROADS(21),
-        ROADSW(22),
-        ROADNW(23),
-        STRUCTURE(24);
-        
-        private final int value;
-        private Layer(int value) { this.value = value; }
     }
 }
